@@ -3,9 +3,13 @@ on:
   push:
     branches:
       - dev
-  merge_group:
+      - main
+      - "**"
+
+  pull_request:
     branches:
       - main
+      - dev
 
 jobs:
   build:
