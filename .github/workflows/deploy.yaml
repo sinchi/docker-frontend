@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  build-dev:
+  build:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: ${{ github.ref == 'refs/heads/main' && prod || dev }}
