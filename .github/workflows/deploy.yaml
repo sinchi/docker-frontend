@@ -2,8 +2,10 @@ name: Deploy Frontend
 on:
   push:
     branches:
-      - main
       - dev
+  merge_group:
+    branches:
+      - main
 
 jobs:
   build:
