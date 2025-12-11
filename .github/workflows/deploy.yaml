@@ -8,8 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: ${{ github.ref == 'refs/heads/main' && prod || dev }}
+    environment: prod
     steps:
       - uses: actions/checkout@v3
 
