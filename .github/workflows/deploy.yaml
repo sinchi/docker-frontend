@@ -7,8 +7,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
-      - uses: actions/checkout@v2
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t cygnetops/react-test -f Dockerfile.dev .
-      - run: docker run -e CI=true cygnetops/react-test npm test
+      - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and test Docker image
+        run: docker build -t sinchi/react-test -f Dockerfile.dev .
+
+      - name: Run tests inside Docker container
+        run: docker run -e CI=true sinchi/react-test npm run test -- --coverage
+
+      #- name: Generate deployment package
+      #  run: zip -r deploy.zip . -x '*.git*'
+
+      #- name: Deploy to EB
+      #  uses: einaregilsson/beanstalk-deploy@v18
+      #  with:
+      #    aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      #    aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+      #    application_name: frontend # elastic beanstalk application name
+      #    environment_name: Frontend-env # elastic beanstalk environment name
+      #    existing_bucket_name: elasticbeanstalk-us-east-1-037036468090 # s3 bucket name
+      #    region: us-east-1
+      #    version_label: ${{ github.sha }}
+      #    deployment_package: deploy.zip
